@@ -17,6 +17,7 @@ import {
 function UserProfile() {
   const logout = useAuth((state) => state.logout);
   const currentUser = useAuth((state) => state.currentUser);
+  const isAuthenticated = useAuth((state) => state.isAuthenticated);
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -24,6 +25,23 @@ function UserProfile() {
   const [articles, setArticles] = useState([]);
 
   useEffect(() => {
+    const role = (currentUser?.role || "").toUpperCase();
+
+    if (!isAuthenticated || !currentUser) {
+      navigate("/login");
+      return;
+    }
+
+    if (role === "AUTHOR") {
+      navigate("/author-profile");
+      return;
+    }
+
+    if (role === "ADMIN") {
+      navigate("/admin-profile");
+      return;
+    }
+
     const getArticles = async () => {
       setLoading(true);
       try {
@@ -34,6 +52,11 @@ function UserProfile() {
           setArticles(res.data.payload)
         }
       } catch (err) {
+        if (err.response?.status === 401) {
+          await logout();
+          navigate("/login");
+          return;
+        }
         setError(err.response?.data?.error || "Something went wrong");
       } finally {
         setLoading(false);
@@ -41,7 +64,7 @@ function UserProfile() {
     };
 
     getArticles();
-  }, []);
+  }, [currentUser, isAuthenticated, logout, navigate]);
 
   // convert UTC → IST
   const formatDateIST = (date) => {
