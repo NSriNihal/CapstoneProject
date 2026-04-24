@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { useAuth } from "../store/authStore";
 import { errorClass, loadingClass, successClass } from "../styles/common";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:4060";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 function AdminProfile() {
   const navigate = useNavigate();

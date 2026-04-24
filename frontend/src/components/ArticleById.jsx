@@ -80,7 +80,7 @@ function ArticleByID() {
 
     try {
       const res = await axios.patch(
-        `http://localhost:4060/author-api/article`,
+        `${import.meta.env.VITE_API_URL}/author-api/article`,
         { articleId: id, isArticleActive: newStatus },
         { withCredentials: true },
       );
@@ -122,7 +122,7 @@ function ArticleByID() {
       commentObj.user = user._id;
       console.log("Sending comment:", commentObj);
       
-      let res = await axios.put("http://localhost:4060/user-api/article", commentObj, { withCredentials: true });
+      let res = await axios.put(`${import.meta.env.VITE_API_URL}/user-api/article`, commentObj, { withCredentials: true });
       
       if (res.status === 200) {
         // Reload article to get updated comments

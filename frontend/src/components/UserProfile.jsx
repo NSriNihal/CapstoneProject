@@ -28,7 +28,7 @@ function UserProfile() {
       setLoading(true);
       try {
         //read articles of all authors
-        let res=await axios.get("http://localhost:4060/user-api/article",{withCredentials:true})
+        let res=await axios.get(`${import.meta.env.VITE_API_URL}/user-api/article`,{withCredentials:true})
         //update articles state
         if(res.status===200){
           setArticles(res.data.payload)
