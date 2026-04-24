@@ -11,6 +11,13 @@ export const commonApp = exp.Router()
 import {upload} from '../config/multer.js'
 import { uploadToCloudinary } from '../config/cloudinaryUpload.js'
 
+const isProd = process.env.NODE_ENV === "production";
+const authCookieOptions = {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax"
+};
+
 //Route for registration
 commonApp.post("/users",upload.single("profileImageUrl"),async(req,res)=>{
     let allowedRoles = ["USER","AUTHOR"]
@@ -69,11 +76,7 @@ commonApp.post('/login',async(req,res)=>{
         process.env.SECRET_KEY,
         {expiresIn:"1d"}
     )
-    res.cookie("token",signedToken,{
-        httpOnly:true,
-        secure:false,
-        sameSite:"lax"
-    })
+    res.cookie("token",signedToken,authCookieOptions)
     //remocve password from user document
     let userObj = user.toObject();
     delete userObj.password
@@ -84,11 +87,7 @@ commonApp.post('/login',async(req,res)=>{
 
 //logout
 commonApp.get("/logout",(req,res)=>{
-    res.clearCookie("token",{
-        httpOnly:true,
-        secure:false,
-        sameSite:"lax"
-    })
+    res.clearCookie("token",authCookieOptions)
     res.status(200).json({message:"Logout Success"})
 })
 
