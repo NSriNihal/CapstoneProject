@@ -47,11 +47,10 @@ function ArticleByID() {
       setLoading(true);
 
       try {
-        // const res = await axios.get(`http://localhost:4060/user-api/article/${id}`, { withCredentials: true });
         const res = await axios.get(
-  `${import.meta.env.VITE_API_URL}/user-api/article/${id}`,
-  { withCredentials: true }
-);
+          `${import.meta.env.VITE_API_URL}/user-api/article/${id}`,
+          { withCredentials: true }
+        );
 
         setArticle(res.data.payload);
       } catch (err) {
@@ -127,7 +126,10 @@ function ArticleByID() {
       
       if (res.status === 200) {
         // Reload article to get updated comments
-        const updatedRes = await axios.get(`http://localhost:4060/user-api/article/${id}`, { withCredentials: true });
+        const updatedRes = await axios.get(
+          `${import.meta.env.VITE_API_URL}/user-api/article/${id}`,
+          { withCredentials: true }
+        );
         setArticle(updatedRes.data.payload);
         
         // Reset form
